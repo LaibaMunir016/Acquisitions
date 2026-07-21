@@ -3,7 +3,9 @@ import logger from './config/logger.js';
 import helmet from 'helmet';
 import morgan from 'morgan'; 
 import cors from 'cors';
+import authRoutes from '../routes/auth.routes.js';
 import cookieParser from 'cookie-parser';
+import { timestamp } from 'drizzle-orm/gel-core';
 
 const app = express();
 app.use(helmet());
@@ -16,5 +18,11 @@ app.get('/', (req, res) => {
   logger.info('Hello from Acquisistion!');
   res.status(200).send('Hello from Acquisitions!');
 });
-
+app.get('/health',(req,res)=>{
+  res.status(200).json({status:'OK',timestamp:new Date().toISOString(),uptime:process.uptime()});
+});
+app.get('/api', (req, res) => {
+  res.status(200).json({message:'Acquisition api is running! '});
+});
+app.use('/api/auth',authRoutes);//api/auth/sign-in
 export default app;
